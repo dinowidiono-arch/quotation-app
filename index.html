@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP Forwarding - Generator Quotation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- PANEL KIRI: FORM INPUT ERP -->
+    <div class="erp-panel no-print">
+      <h2>ERP System - Input Quotation</h2>
+      <form id="quotationForm">
+        
+        <!-- Informasi Dokumen & Pelanggan -->
+        <fieldset>
+          <legend>Data Pelanggan & Dokumen</legend>
+          <div class="form-group">
+            <label>No. Quotation</label>
+            <input type="text" id="inputNoQuo" value="QUO/2026/09/0042">
+          </div>
+          <div class="form-group">
+            <label>Nama Perusahaan Pelanggan</label>
+            <input type="text" id="inputCustomer" value="PT. Sumber Makmur Abadi">
+          </div>
+          <div class="form-group">
+            <label>U.p. (Nama Kontak)</label>
+            <input type="text" id="inputAttn" value="Bp. Hendra Wijaya">
+          </div>
+          <div class="form-group">
+            <label>Email Pelanggan</label>
+            <input type="email" id="inputEmail" value="hendra@sumbermakmur.co.id">
+          </div>
+          <div class="form-group">
+            <label>Tgl Quotation / Masa Berlaku</label>
+            <div class="grid-2">
+              <input type="date" id="inputDate" value="2026-09-27">
+              <input type="date" id="inputValidDate" value="2026-10-11">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Detail Pengiriman -->
+        <fieldset>
+          <legend>Detail Pengiriman (Shipment)</legend>
+          <div class="form-group">
+            <label>Jenis Layanan & Incoterms</label>
+            <div class="grid-2">
+              <input type="text" id="inputService" value="Ocean Freight (FCL 1x40' HC)">
+              <input type="text" id="inputIncoterm" value="FOB Shanghai">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Asal (POL) / Tujuan (POD)</label>
+            <div class="grid-2">
+              <input type="text" id="inputPOL" value="Shanghai, China (CNSHA)">
+              <input type="text" id="inputPOD" value="Tanjung Priok, Jakarta (IDTPP)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Komoditas / Berat & Volume</label>
+            <div class="grid-2">
+              <input type="text" id="inputCommodity" value="Spareparts Mesin">
+              <input type="text" id="inputWeightVol" value="12,500 Kg / 58 CBM">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Tabel Rincian Biaya -->
+        <fieldset>
+          <legend>Rincian Biaya (Cost Items)</legend>
+          <table id="itemsInputTable">
+            <thead>
+              <tr>
+                <th>Deskripsi Biaya</th>
+                <th width="70">Qty</th>
+                <th width="110">Harga (IDR)</th>
+                <th width="30"></th>
+              </tr>
+            </thead>
+            <tbody id="itemList">
+              <!-- Item akan ditambahkan via JS -->
+            </tbody>
+          </table>
+          <button type="button" class="btn-add" onclick="addItemRow()">+ Tambah Biaya</button>
+        </fieldset>
+
+        <!-- Pengaturan Tambahan -->
+        <fieldset>
+          <legend>Pajak & Sales</legend>
+          <div class="form-group">
+            <label>Tarif PPN (%)</label>
+            <input type="number" id="inputPPN" value="1.1" step="0.1">
+          </div>
+          <div class="form-group">
+            <label>Nama Sales Executive</label>
+            <input type="text" id="inputSales" value="Budi Santoso">
+          </div>
+        </fieldset>
+
+        <button type="button" class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
+      </form>
+    </div>
+
+    <!-- PANEL KANAN: PREVIEW TEMPLATE QUOTATION -->
+    <div class="preview-panel">
+      <div class="quotation-container">
+        
+        <header class="header">
+          <div class="company-info" style="display: flex; align-items: center; gap: 15px;>
+           
+           <img src="logo.png" alt="Logo" style="height: 50px;">
+
+	   <div>
+            <h1 class="company-name">TIRTA INDORAYA LOGISTICS</h1>
+            <p>Kirana Tower Two, 11th Floor, Unit C, JL. Boulevard Timur Kav 88, Kelapa Gading, Jakarta 14250</p>
+            <p>Telp: (021) 29629655 | Email: ti_logistics@tirtaindoraya.com</p>
+          </div>
+          <div class="document-title">
+            <h2>QUOTATION</h2>
+            <span class="quotation-number" id="outNoQuo">QUO/2026/09/0042</span>
+          </div>
+        </header>
+
+        <hr class="divider">
+
+        <section class="meta-section">
+          <div class="customer-details">
+            <h3>Kepada (Customer):</h3>
+            <p><strong id="outCustomer">PT. Sumber Makmur Abadi</strong></p>
+            <p>U.p.: <span id="outAttn">Bp. Hendra Wijaya</span></p>
+            <p>Email: <span id="outEmail">hendra@sumbermakmur.co.id</span></p>
+          </div>
+          <div class="quote-details">
+            <table>
+              <tr>
+                <td><strong>Tanggal Quotation</strong></td>
+                <td>: <span id="outDate">27 September 2026</span></td>
+              </tr>
+              <tr>
+                <td><strong>Masa Berlaku</strong></td>
+                <td>: <span id="outValidDate">11 Oktober 2026</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sales Executive</strong></td>
+                <td>: <span id="outSales">Budi Santoso</span></td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <section class="shipment-section">
+          <h3>Detail Pengiriman (Shipment Info)</h3>
+          <div class="shipment-grid">
+            <div><strong>Layanan:</strong> <span id="outService">-</span></div>
+            <div><strong>Incoterms:</strong> <span id="outIncoterm">-</span></div>
+            <div><strong>Pelabuhan Asal:</strong> <span id="outPOL">-</span></div>
+            <div><strong>Pelabuhan Tujuan:</strong> <span id="outPOD">-</span></div>
+            <div><strong>Komoditas:</strong> <span id="outCommodity">-</span></div>
+            <div><strong>Berat / Volume:</strong> <span id="outWeightVol">-</span></div>
+          </div>
+        </section>
+
+        <section class="table-section">
+          <table class="cost-table">
+            <thead>
+              <tr>
+                <th width="30">No</th>
+                <th>Deskripsi Biaya</th>
+                <th class="text-center" width="80">Qty / Vol</th>
+                <th class="text-right" width="120">Harga (IDR)</th>
+                <th class="text-right" width="130">Total (IDR)</th>
+              </tr>
+            </thead>
+            <tbody id="outCostTable">
+              <!-- Rendered by JS -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="no-border"></td>
+                <td class="text-right"><strong>Subtotal:</strong></td>
+                <td class="text-right"><strong id="outSubtotal">0</strong></td>
+              </tr>
+              <tr>
+                <td colspan="3" class="no-border"></td>
+                <td class="text-right">PPN (<span id="outPPNRate">0</span>%):</td>
+                <td class="text-right" id="outPPNAmount">0</td>
+              </tr>
+              <tr class="total-row">
+                <td colspan="3" class="no-border"></td>
+                <td class="text-right"><strong>Grand Total:</strong></td>
+                <td class="text-right"><strong id="outGrandTotal">0</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
+
+        <section class="terms-section">
+          <h3>Syarat & Ketentuan (Terms & Conditions)</h3>
+          <ol>
+            <li>Harga berlaku hingga tanggal yang ditentukan di atas dan dapat berubah tergantung ketersediaan armada.</li>
+            <li>Biaya di atas belum termasuk <em>Demurrage</em>, <em>Detention</em>, atau penumpukan jika terjadi keterlambatan dari pihak pemilik barang.</li>
+            <li>Truck Waiting Time Charges in case of 12 to 24 hours is 50% of Pickup Charges.</li>
+            <li>Storage/staple >24hours 100% of delivery charges per days.</li>
+            <li>Pembayaran dilakukan sesuai kesepakatan terms of payment setelah invoice diterima.</li>
+          </ol>
+        </section>
+
+        <section class="signature-section">
+          <div class="sig-box">
+            <p>Hormat Kami,</p>
+            <p><strong>PT. Tirta Indoraya Logistics</strong></p>
+            <div class="sig-space"></div>
+            <p><u id="outSalesSig">Budi Santoso</u></p>
+            <p>Sales Executive</p>
+          </div>
+          <div class="sig-box">
+            <p>Disetujui Oleh,</p>
+            <p><strong id="outCustomerSig">PT. Sumber Makmur Abadi</strong></p>
+            <div class="sig-space"></div>
+            <p><u>____________________</u></p>
+            <p>Authorized Signature</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
